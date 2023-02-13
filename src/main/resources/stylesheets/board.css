@@ -1,0 +1,24 @@
+#boardGridPane {
+
+}
+
+.cell {
+    -fx-min-height: 75;
+    -fx-min-width: 75;
+}
+
+#lightCell {
+   -fx-background-color: #EEEED2;
+}
+
+#darkCell {
+    -fx-background-color: #769656;
+}
+
+#selectedLightCell {
+    -fx-background-color: #F6F669;
+}
+
+#selectedDarkCell {
+    -fx-background-color: #BACA2B;
+}
