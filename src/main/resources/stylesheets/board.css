@@ -22,3 +22,9 @@
 #selectedDarkCell {
     -fx-background-color: #BACA2B;
 }
+
+#movementIndicator {
+    -fx-opacity: 0.5;
+    -fx-background-color: grey;
+}
+

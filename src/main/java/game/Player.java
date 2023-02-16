@@ -46,7 +46,14 @@ public class Player {
         // TODO: 13/02/2023 finish this so it checks if target is occupied with friendly or enemy
     }
 
-    public static void move(int row, int column, boolean isWhite) {
+    public void move(int row, int column) {
+        Piece selectedPiece;
+        for(Piece piece : this.pieces) { //Get Selected Piece
+            if(piece.getColumn() == column && piece.getRow() == row) {
+
+                break;
+            }
+        }
 
     }
     private void takePiece() {
@@ -103,6 +110,7 @@ public class Player {
             for (int i = 0; i < 8; i++) {
                 this.pieces.add(new Pawn(false, 1, i));
             }
+            this.pieces.add(new Pawn(false, 5, 4));
             this.pieces.add(new Rook(false, 0, 0));
             this.pieces.add(new Rook(false, 0, 7));
             this.pieces.add(new Knight(false, 0, 1));

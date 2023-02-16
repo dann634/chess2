@@ -7,11 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-    private static Player player1;
-    private static Player player2;
+    public static Player player1;
+    public static Player player2;
 
-    public void start(Board board) {
+    public static Board board;
+
+    public void start(Board localboard) {
         Thread gameThread = new Thread(() -> {
+            board = localboard;
             player1 = new Player(true);
             player2 = new Player(false);
 

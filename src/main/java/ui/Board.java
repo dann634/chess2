@@ -8,12 +8,17 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Circle;
 
 import java.util.List;
+
+import static game.Game.player1;
+import static game.Game.player2;
 
 public class Board {
 
     private GridPane gridPane;
+    private Piece selectedPiece;
 
     public Scene getBoard() {
         gridPane = new GridPane();
@@ -57,6 +62,25 @@ public class Board {
         return null;
     }
 
+    public void addMovementIndicators(List<int[]> validMoves) {
+        //remove all indicators
+        gridPane.getChildren().removeIf(Circle.class::isInstance);
+
+        //add new indicators
+        for(int[] move : validMoves) {
+            Circle movementIndicator = new Circle();
+            movementIndicator.setRadius(20);
+            movementIndicator.setTranslateX(17);
+            movementIndicator.toFront();
+            if(!selectedPiece.isCellOccupied(move[1], move[0])) {
+                movementIndicator.setId("movementIndicator");
+            } else {
+                movementIndicator.setId("movementIndicatorTake");
+            }
+            gridPane.add(movementIndicator, move[0], move[1]);
+        }
+    }
+
     class Cell {
         private Piece pieceInCell;
         private boolean isOccupied;
@@ -84,12 +108,12 @@ public class Board {
                 // TODO: 12/02/2023 Get Available moves if piece in cell and right players turn
                 this.pieceInCell = getPieceInCell();
                 if(this.pieceInCell != null) {
-                    System.out.println(Game.isWhiteTurn());
-                    System.out.println(this.pieceInCell.isWhite());
+                    selectedPiece = this.pieceInCell;
+                    addMovementIndicators(selectedPiece.getValidMoves());
                     if(this.pieceInCell.isWhite() && Game.isWhiteTurn()) {
-                        Player.move(row, column, true);
+                        player1.move(row, column);
                     } else if(!this.pieceInCell.isWhite() && !Game.isWhiteTurn()) {
-                        Player.move(row, column, false);
+                        player2.move(row, column);
                     }
                 } else {
                     System.out.println("Empty Square");
@@ -97,6 +121,8 @@ public class Board {
             });
 
         }
+
+
 
 
 
