@@ -1,6 +1,8 @@
 package ui;
 
+import game.Game;
 import game.Piece;
+import game.Player;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
@@ -30,10 +32,10 @@ public class Board {
         setUpBoard();
 
         for(Piece piece : player1Pieces) {
-            gridPane.add(piece.getImageView(), piece.getRow(), piece.getColumn());
+            gridPane.add(piece.getImageView(), piece.getColumn(), piece.getRow());
         }
         for(Piece piece : player2Pieces) {
-            gridPane.add(piece.getImageView(), piece.getRow(), piece.getColumn());
+            gridPane.add(piece.getImageView(), piece.getColumn(), piece.getRow());
         }
     }
 
@@ -41,7 +43,7 @@ public class Board {
     private void setUpBoard() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                gridPane.add(new Cell(i, j).getCell(), i, j);
+                gridPane.add(new Cell(i, j).getCell(), j, i);
             }
         }
     }
@@ -69,7 +71,7 @@ public class Board {
             this.isOccupied = false;
             this.pieceInCell = null;
 
-            boolean isLight = (row + column) % 2 != 0;
+            boolean isLight = (row + column) % 2 == 0;
             this.vBox = new VBox();
             this.vBox.getStyleClass().add("cell");
             if(isLight) {
@@ -80,8 +82,32 @@ public class Board {
 
             vBox.setOnMouseClicked(mouseEvent -> {
                 // TODO: 12/02/2023 Get Available moves if piece in cell and right players turn
+                this.pieceInCell = getPieceInCell();
+                if(this.pieceInCell != null) {
+                    System.out.println(Game.isWhiteTurn());
+                    System.out.println(this.pieceInCell.isWhite());
+                    if(this.pieceInCell.isWhite() && Game.isWhiteTurn()) {
+                        Player.move(row, column, true);
+                    } else if(!this.pieceInCell.isWhite() && !Game.isWhiteTurn()) {
+                        Player.move(row, column, false);
+                    }
+                } else {
+                    System.out.println("Empty Square");
+                }
             });
 
+        }
+
+
+
+        private Piece getPieceInCell() {
+            List<Piece> allPieces = Game.getAllPieces();
+            for(Piece piece : allPieces) {
+                if(piece.getRow() == this.row && piece.getColumn() == this.column) {
+                    return piece;
+                }
+            }
+            return null;
         }
 
         public void occupyCell(Piece piece) {
@@ -89,6 +115,7 @@ public class Board {
             this.pieceInCell = piece;
             // TODO: 12/02/2023 Update Board UI
         }
+
 
         public VBox getCell() {
             return this.vBox;

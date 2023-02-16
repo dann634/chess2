@@ -17,10 +17,16 @@ public class Player {
 
     private List<Piece> pieces;
 
+    private boolean piecesEnabled;
+
     public Player(boolean isWhite) {
         this.isWhite = isWhite;
         if(isWhite) { //white moves first
-            isTurn = true;
+            this.isTurn = true;
+            this.piecesEnabled = true;
+        } else {
+            this.isTurn = false;
+            this.piecesEnabled = false;
         }
 
         this.pawns = 8;
@@ -40,21 +46,40 @@ public class Player {
         // TODO: 13/02/2023 finish this so it checks if target is occupied with friendly or enemy
     }
 
+    public static void move(int row, int column, boolean isWhite) {
+
+    }
     private void takePiece() {
 
     }
 
     public boolean getTurn() {
-        if(this.isTurn) {
-            this.isTurn = false;
-            return true;
-        }
-        return false;
+        return this.isTurn;
     }
 
-    public void enablePieces() {}
+    public void enablePieces() {
+        this.piecesEnabled = true;
+        for(Piece piece : this.pieces) {
+            piece.getImageView().setDisable(false);
+        }
+        if(this.isWhite) {
+            System.out.println("White's Pieces enabled");
+        } else {
+            System.out.println("Black's Pieces enabled");
+        }
+    }
 
-    public void disablePieces() {}
+    public void disablePieces() {
+        this.piecesEnabled = false;
+        for(Piece piece : pieces) {
+            piece.getImageView().setDisable(true);
+        }
+        if(this.isWhite) {
+            System.out.println("White's Pieces disabled");
+        } else {
+            System.out.println("Black's Pieces disabled");
+        }
+    }
 
     public boolean hasWon() {
         return false;
@@ -100,4 +125,13 @@ public class Player {
     public void setHasPlayerMoved(boolean hasPlayerMoved) {
         this.hasPlayerMoved = hasPlayerMoved;
     }
+
+    public boolean arePiecesEnabled() {
+        return this.piecesEnabled;
+    }
+
+    public void setPiecesEnabled(boolean piecesEnabled) {
+        this.piecesEnabled = piecesEnabled;
+    }
+
 }

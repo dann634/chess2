@@ -19,6 +19,9 @@ public class Piece {
 
         this.image = new Image(getImageDir(name));
         this.imageView = new ImageView(this.image);
+        this.imageView.setFitHeight(75);
+        this.imageView.setFitWidth(75);
+        this.imageView.setMouseTransparent(true);
     }
 
     protected String getImageDir(String name) {
@@ -31,11 +34,11 @@ public class Piece {
     }
 
     public int getRow() {
-        return row;
+        return this.row;
     }
 
     public int getColumn() {
-        return column;
+        return this.column;
     }
 
     public void setRow(int row) {
@@ -44,6 +47,10 @@ public class Piece {
 
     public void setColumn(int column) {
         this.column = column;
+    }
+
+    public boolean isWhite() {
+        return isWhite;
     }
 }
 

@@ -3,15 +3,23 @@ package game;
 import javafx.application.Platform;
 import ui.Board;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Game {
+    private static Player player1;
+    private static Player player2;
 
     public void start(Board board) {
         Thread gameThread = new Thread(() -> {
-            Player player1 = new Player(true);
-            Player player2 = new Player(false);
+            player1 = new Player(true);
+            player2 = new Player(false);
 
             player1.initializePieces();
             player2.initializePieces();
+
+            //Add Pieces to start game
+            Platform.runLater(() -> board.drawBoard(player1.getPieces(), player2.getPieces()));
 
             while(true) { //Main game loop
 
@@ -23,10 +31,11 @@ public class Game {
                 }
 
                 //Round based system
-                if(player1.getTurn()) {
+                if(player1.getTurn() && !player1.arePiecesEnabled()) {
                     player1.enablePieces();
                     player2.disablePieces();
-                } else {
+
+                } else if(player2.getTurn() && !player2.arePiecesEnabled()){
                     player2.enablePieces();
                     player1.disablePieces();
                 }
@@ -42,6 +51,17 @@ public class Game {
         });
         gameThread.setDaemon(true);
         gameThread.start();
+    }
+
+    public static List<Piece> getAllPieces() {
+        List<Piece> allPieces = new ArrayList<>();
+        allPieces.addAll(player1.getPieces());
+        allPieces.addAll(player2.getPieces());
+        return allPieces;
+    }
+
+    public static boolean isWhiteTurn() {
+        return player1.getTurn();
     }
 
 
