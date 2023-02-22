@@ -16,35 +16,71 @@ public class Pawn extends Piece {
     @Override
     public void move(Piece piece, int targetRow, int targetColumn) {
         //Add movement indicators
-        board.addMovementIndicators(getValidMoves());
-        System.out.println("HELLO");
+//        board.addMovementIndicators(getValidMoves());
     }
 
     public List<int[]> getValidMoves() {
         List<int[]> allMoves = getAllMoves();
         List<int[]> invalidMoves = new ArrayList<>();
-        boolean isBlocked = false;
 
-        for (int i = 0; i < allMoves.size(); i++) {
-            int[] move = allMoves.get(i);
-            boolean isCellOccupied = isCellOccupied(move[1], move[0]);
-            if(i < 2 && !isBlocked) { //Checks first 2 squares forward
-                if(isCellOccupied) {
-                    invalidMoves.add(move);
-                    isBlocked = true; // FIXME: 16/02/2023 Adding blocked condition makes more indciators>?>!>!>>?!?>!>?!?
+        try {
+            //move forward one
+            int[] move1 = allMoves.get(0);
+            if(isCellOccupied(move1[1], move1[0])) {
+                invalidMoves.add(move1);
+            }
+
+            //move forward two
+            int[] move2 = allMoves.get(1);
+            if(this.isWhite()) {
+                if(this.getRow() != 6) { //if not on starting square
+                    invalidMoves.add(move2);
+                } else if(isCellOccupied(move2[1], move2[0]) || isCellOccupied(move1[1], move1[0])) { //if on starting square but cells are blocked
+                    invalidMoves.add(move2);
                 }
             } else {
-                if(!isCellOccupied) { //If diagonals are empty they are invalid
-                    invalidMoves.add(move);
-                } else { //Check if enemy in diagonals
-                    if((this.isWhite() == isTargetWhite(move[1], move[0])) || (!this.isWhite() == !isTargetWhite(move[1], move[0]))) {
-                        invalidMoves.add(move);
-                    }
+                if(this.getRow() != 1) { //if not on starting square
+                    invalidMoves.add(move2);
+                } else if(isCellOccupied(move2[1], move2[0]) || isCellOccupied(move1[1], move1[0])) { //if on starting square but cells are blocked
+                    invalidMoves.add(move2);
                 }
             }
-        }
+
+            //take on left diagonal
+            int[] move3 = allMoves.get(2);
+            if(this.isWhite()) {
+                if(isCellOccupied(move3[1], move3[0]) && isTargetWhite(move3[1], move3[0])) {
+                    invalidMoves.add(move3);
+                } else if(!isCellOccupied(move3[1], move3[0])){
+                    invalidMoves.add(move3);
+                }
+            } else {
+                if(isCellOccupied(move3[1], move3[0]) && !isTargetWhite(move3[1], move3[0])) {
+                    invalidMoves.add(move3);
+                } else if(!isCellOccupied(move3[1], move3[0])){
+                    invalidMoves.add(move3);
+                }
+            }
+
+            //take on right diagonal
+            int[] move4 = allMoves.get(3);
+            if(this.isWhite()) {
+                if(isCellOccupied(move4[1], move4[0]) && isTargetWhite(move4[1], move4[0])) {
+                    invalidMoves.add(move4);
+                } else if(!isCellOccupied(move4[1], move4[0])){
+                    invalidMoves.add(move4);
+                }
+            } else {
+                if(isCellOccupied(move4[1], move4[0]) && !isTargetWhite(move4[1], move4[0])) {
+                    invalidMoves.add(move4);
+                } else if(!isCellOccupied(move4[1], move4[0])){
+                    invalidMoves.add(move4);
+                }
+            }
+        } catch (IndexOutOfBoundsException ignored) {}
 
         allMoves.removeAll(invalidMoves);
+
 
         return allMoves;
     }

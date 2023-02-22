@@ -70,7 +70,8 @@
                             <jlinkImageName>app</jlinkImageName>
                             <noManPages>true</noManPages>
                             <stripDebug>true</stripDebug>
-                            <noHeaderFiles>true</noHeaderFiles>
+                            <noHeaderFiles>0</noHeaderFiles>
+                            <debugForkedProcess>0</debugForkedProcess>
                         </configuration>
                     </execution>
                 </executions>

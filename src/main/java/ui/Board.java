@@ -3,13 +3,17 @@ package ui;
 import game.Game;
 import game.Piece;
 import game.Player;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static game.Game.player1;
@@ -63,22 +67,45 @@ public class Board {
     }
 
     public void addMovementIndicators(List<int[]> validMoves) {
+
         //remove all indicators
-        gridPane.getChildren().removeIf(Circle.class::isInstance);
+        drawBoard(player1.getPieces(), player2.getPieces()); //Removes all old movement indicators (lazy fix + inefficient)
+        //Removing just circles ran into problems
 
         //add new indicators
         for(int[] move : validMoves) {
-            Circle movementIndicator = new Circle();
-            movementIndicator.setRadius(20);
-            movementIndicator.setTranslateX(17);
-            movementIndicator.toFront();
-            if(!selectedPiece.isCellOccupied(move[1], move[0])) {
-                movementIndicator.setId("movementIndicator");
-            } else {
-                movementIndicator.setId("movementIndicatorTake");
+            if(this.selectedPiece.isWhite() && Game.isWhiteTurn()) {
+                createMovementIndicators(move);
+            } else if(!this.selectedPiece.isWhite() && !Game.isWhiteTurn()) {
+                createMovementIndicators(move);
             }
-            gridPane.add(movementIndicator, move[0], move[1]);
         }
+    }
+
+    private void createMovementIndicators(int[] move) {
+        Circle circle = new Circle();
+        circle.setRadius(20);
+        circle.setTranslateX(17);
+        if(!selectedPiece.isCellOccupied(move[1], move[0])) {
+            circle.setId("movementIndicator");
+        } else {
+            circle.setId("movementIndicatorTake");
+        }
+
+        circle.setOnMouseClicked(mouseEvent -> {
+            //selected piece moves to square
+
+            if(this.selectedPiece.isWhite() && Game.isWhiteTurn()) { //Checking piece matching the turn
+                player1.move(move[1], move[0]);
+
+            } else if(!this.selectedPiece.isWhite() && !Game.isWhiteTurn()) { //Checking piece matching the turn
+                player2.move(move[1], move[0]);
+
+            }
+        });
+
+
+        gridPane.add(circle, move[0], move[1]);
     }
 
     class Cell {
@@ -110,11 +137,7 @@ public class Board {
                 if(this.pieceInCell != null) {
                     selectedPiece = this.pieceInCell;
                     addMovementIndicators(selectedPiece.getValidMoves());
-                    if(this.pieceInCell.isWhite() && Game.isWhiteTurn()) {
-                        player1.move(row, column);
-                    } else if(!this.pieceInCell.isWhite() && !Game.isWhiteTurn()) {
-                        player2.move(row, column);
-                    }
+
                 } else {
                     System.out.println("Empty Square");
                 }
