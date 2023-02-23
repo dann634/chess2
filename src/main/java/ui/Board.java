@@ -96,12 +96,15 @@ public class Board {
             //selected piece moves to square
 
             if(this.selectedPiece.isWhite() && Game.isWhiteTurn()) { //Checking piece matching the turn
-                player1.move(move[1], move[0]);
+                player1.move(move[1], move[0], this.selectedPiece);
 
             } else if(!this.selectedPiece.isWhite() && !Game.isWhiteTurn()) { //Checking piece matching the turn
-                player2.move(move[1], move[0]);
-
+                player2.move(move[1], move[0], this.selectedPiece);
             }
+
+            //Update Board
+            drawBoard(player1.getPieces(), player2.getPieces());
+
         });
 
 
@@ -132,7 +135,6 @@ public class Board {
             }
 
             vBox.setOnMouseClicked(mouseEvent -> {
-                // TODO: 12/02/2023 Get Available moves if piece in cell and right players turn
                 this.pieceInCell = getPieceInCell();
                 if(this.pieceInCell != null) {
                     selectedPiece = this.pieceInCell;
@@ -162,7 +164,6 @@ public class Board {
         public void occupyCell(Piece piece) {
             this.isOccupied = true;
             this.pieceInCell = piece;
-            // TODO: 12/02/2023 Update Board UI
         }
 
 

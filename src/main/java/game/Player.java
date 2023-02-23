@@ -13,9 +13,9 @@ public class Player {
     private byte bishops;
     private byte queen;
 
-    private boolean hasPlayerMoved;
-
     private List<Piece> pieces;
+
+    private boolean hasMoved;
 
     private boolean piecesEnabled;
 
@@ -29,6 +29,8 @@ public class Player {
             this.piecesEnabled = false;
         }
 
+        this.hasMoved = false;
+
         this.pawns = 8;
         this.knights = 2;
         this.rooks = 2;
@@ -36,24 +38,15 @@ public class Player {
         this.queen = 1;
     }
 
-    public void makeMove(Piece piece, int targetRow, int targetColumn, Piece[] board) {
-        //Move piece into square
-        //Update piece row and col
-        piece.setRow(targetRow);
-        piece.setColumn(targetColumn);
-        this.hasPlayerMoved = true;
-        //Call takePiece() if necessary
-        // TODO: 13/02/2023 finish this so it checks if target is occupied with friendly or enemy
-    }
+    public void move(int row, int column, Piece selectedPiece) {
+        //this.selectedPiece moves to row,column and takes if needed
+        //row and col of piece are updated
 
-    public void move(int row, int column) {
-        Piece selectedPiece;
-        for(Piece piece : this.pieces) { //Get Selected Piece
-            if(piece.getColumn() == column && piece.getRow() == row) {
+        selectedPiece.setRow(row); //new row
+        selectedPiece.setColumn(column); //new column
 
-                break;
-            }
-        }
+        this.hasMoved = true;
+        this.isTurn = false;
 
     }
     private void takePiece() {
@@ -126,13 +119,6 @@ public class Player {
         return pieces;
     }
 
-    public boolean hasPlayerMoved() {
-        return hasPlayerMoved;
-    }
-
-    public void setHasPlayerMoved(boolean hasPlayerMoved) {
-        this.hasPlayerMoved = hasPlayerMoved;
-    }
 
     public boolean arePiecesEnabled() {
         return this.piecesEnabled;
@@ -142,4 +128,15 @@ public class Player {
         this.piecesEnabled = piecesEnabled;
     }
 
+    public boolean isHasMoved() {
+        return hasMoved;
+    }
+
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
+
+    public void setTurn(boolean turn) {
+        isTurn = turn;
+    }
 }

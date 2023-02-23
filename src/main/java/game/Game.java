@@ -26,11 +26,25 @@ public class Game {
 
             while(true) { //Main game loop
 
-                //Draw Pieces to board (only updates after player has moved)
-                if(player1.hasPlayerMoved() || player2.hasPlayerMoved()) {
-                    Platform.runLater(() -> board.drawBoard(player1.getPieces(), player2.getPieces()));
-                    player1.setHasPlayerMoved(false);
-                    player2.setHasPlayerMoved(false);
+
+                //Update Turns
+                if(player1.isHasMoved()) {
+                    player1.setHasMoved(false);
+                    player2.setTurn(true);
+                } else if(player2.isHasMoved()){
+                    player2.setHasMoved(true);
+                    player1.setTurn(true);
+                }
+
+                // FIXME: 23/02/2023 Some logic is broken here idk what (concurrency issue maybe)
+                
+                
+                if(player1.getTurn()) {
+                    System.out.println("Whites Turn");
+                }
+
+                if(player2.getTurn()) {
+                    System.out.println("Blacks Turn");
                 }
 
                 //Round based system
