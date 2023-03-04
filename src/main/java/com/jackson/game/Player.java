@@ -1,17 +1,11 @@
-package game;
+package com.jackson.game;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Player {
     private boolean isWhite;
     private boolean isTurn;
-
-    private byte pawns;
-    private byte knights;
-    private byte rooks;
-    private byte bishops;
-    private byte queen;
+    private boolean inCheck;
 
     private List<Piece> pieces;
 
@@ -30,17 +24,30 @@ public class Player {
         }
 
         this.hasMoved = false;
+        this.inCheck = false;
 
-        this.pawns = 8;
-        this.knights = 2;
-        this.rooks = 2;
-        this.bishops = 2;
-        this.queen = 1;
     }
 
     public void move(int row, int column, Piece selectedPiece) {
         //this.selectedPiece moves to row,column and takes if needed
         //row and col of piece are updated
+
+        //DESTROY ENEMY PIECE
+        boolean destroyPiece = false;
+        if(selectedPiece.isCellOccupied(row, column)) {
+            if(this.isWhite && !selectedPiece.isTargetWhite(row, column)) {
+                destroyPiece = true;
+            } else if(!this.isWhite && selectedPiece.isTargetWhite(row, column)) {
+                destroyPiece = true;
+            }
+        }
+
+        if(destroyPiece) { //Eating pieces
+            Piece enemy = Game.getPiece(row, column);
+            if(enemy != null) {
+                Game.destroyPiece(enemy);
+            }
+        }
 
         selectedPiece.setRow(row); //new row
         selectedPiece.setColumn(column); //new column
@@ -49,9 +56,23 @@ public class Player {
         this.isTurn = false;
 
     }
-    private void takePiece() {
 
+    public void isChecked() {
+        King myKing = King.getKing(this.isWhite);
+        if(myKing.isInCheck()) {
+            this.inCheck = true;
+            if(this.isWhite) {
+                System.out.println("White King in Check");
+            } else {
+                System.out.println("Black King in Check");
+            }
+        } else {
+            this.inCheck = false;
+        }
     }
+
+
+
 
     public boolean getTurn() {
         return this.isTurn;
@@ -62,11 +83,6 @@ public class Player {
         for(Piece piece : this.pieces) {
             piece.getImageView().setDisable(false);
         }
-        if(this.isWhite) {
-            System.out.println("White's Pieces enabled");
-        } else {
-            System.out.println("Black's Pieces enabled");
-        }
     }
 
     public void disablePieces() {
@@ -74,15 +90,31 @@ public class Player {
         for(Piece piece : pieces) {
             piece.getImageView().setDisable(true);
         }
-        if(this.isWhite) {
-            System.out.println("White's Pieces disabled");
-        } else {
-            System.out.println("Black's Pieces disabled");
-        }
     }
 
     public boolean hasWon() {
         return false;
+    }
+
+    public Set<int[]> getAllMoves() {
+        Set<int[]> allMoves = new HashSet<>();
+        for(Piece piece : this.pieces) {
+            allMoves.addAll(piece.getValidMoves());
+        }
+        return allMoves;
+    }
+
+    public Set<int[]> getAllMovesButKing() {
+        Set<int[]> moves = new HashSet<>();
+        for(Piece piece : this.pieces) {
+            if(!piece.getClass().getSimpleName().equals("King")) {
+                moves.addAll(piece.getValidMoves());
+//                for(int[] move : piece.()) {
+//                    System.out.println(piece.getClass().getSimpleName() + ": (" + move[1] + "," + move[0] +")");
+//                }
+            }
+        }
+        return moves;
     }
 
     public void initializePieces() {
@@ -103,7 +135,6 @@ public class Player {
             for (int i = 0; i < 8; i++) {
                 this.pieces.add(new Pawn(false, 1, i));
             }
-            this.pieces.add(new Pawn(false, 5, 4));
             this.pieces.add(new Rook(false, 0, 0));
             this.pieces.add(new Rook(false, 0, 7));
             this.pieces.add(new Knight(false, 0, 1));
@@ -139,4 +170,12 @@ public class Player {
     public void setTurn(boolean turn) {
         isTurn = turn;
     }
+
+    public static boolean isColourOpposite(boolean isWhite, Piece piece) {
+        if((isWhite && piece.isWhite()) || (!isWhite && !piece.isWhite())) {
+            return false;
+        }
+        return true;
+    }
+
 }

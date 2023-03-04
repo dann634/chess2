@@ -1,9 +1,9 @@
-package main;
+package com.jackson.main;
 
-import game.Game;
+import com.jackson.game.Game;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import ui.Board;
+import com.jackson.ui.Board;
 
 public class Main extends Application {
     @Override

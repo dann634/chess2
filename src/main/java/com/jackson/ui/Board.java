@@ -1,23 +1,17 @@
-package ui;
+package com.jackson.ui;
 
-import game.Game;
-import game.Piece;
-import game.Player;
-import javafx.event.EventHandler;
+import com.jackson.game.Game;
+import com.jackson.game.Piece;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static game.Game.player1;
-import static game.Game.player2;
+import static com.jackson.game.Game.player1;
+import static com.jackson.game.Game.player2;
 
 public class Board {
 
@@ -86,11 +80,7 @@ public class Board {
         Circle circle = new Circle();
         circle.setRadius(20);
         circle.setTranslateX(17);
-        if(!selectedPiece.isCellOccupied(move[1], move[0])) {
-            circle.setId("movementIndicator");
-        } else {
-            circle.setId("movementIndicatorTake");
-        }
+        circle.setId("movementIndicator");
 
         circle.setOnMouseClicked(mouseEvent -> {
             //selected piece moves to square
@@ -106,7 +96,6 @@ public class Board {
             drawBoard(player1.getPieces(), player2.getPieces());
 
         });
-
 
         gridPane.add(circle, move[0], move[1]);
     }
@@ -140,8 +129,6 @@ public class Board {
                     selectedPiece = this.pieceInCell;
                     addMovementIndicators(selectedPiece.getValidMoves());
 
-                } else {
-                    System.out.println("Empty Square");
                 }
             });
 

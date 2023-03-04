@@ -1,4 +1,4 @@
-package game;
+package com.jackson.game;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,32 +31,30 @@ public abstract class Piece {
         return "images/" + colour + name + ".png";
     }
 
-   protected abstract void move(Piece piece, int targetRow, int targetColumn);
-
-   protected boolean isTargetWhite(int row, int column) {
-        for(Piece piece : Game.getAllPieces()) {
-            if(piece.getColumn() == column && piece.getRow() == row) {
-                if(piece.isWhite) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+    protected boolean isTargetWhite(int row, int column) {
+        if(Game.getPiece(row, column).isWhite) {
+            return true;
         }
         return false;
-   }
 
-    public boolean isCellOccupied(int targetRow, int targetColumn) {
-        for(Piece piece : Game.getAllPieces()) {
-            if(piece.getRow() == targetRow && piece.getColumn() == targetColumn) {
-                return true;
-            }
-        }
-        return false;
+    }
+    protected List<int[]> getCheckMoves() {
+        return null;
     }
 
-   public abstract List<int[]> getValidMoves();
+    public boolean isCellOccupied(int targetRow, int targetColumn) {
 
+        if(Game.getPiece(targetRow, targetColumn) != null) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+    public abstract List<int[]> getValidMoves();
+
+    protected abstract List<int[]> getAllMoves();
 
     public ImageView getImageView() {
         return imageView;
@@ -71,19 +69,19 @@ public abstract class Piece {
     }
 
     public void setRow(int row) {
-        if(row >= 0 && row <= 7) {
+        if (row >= 0 && row <= 7) {
             this.row = row;
         }
     }
 
     public void setColumn(int column) {
-        if(column >= 0 && column <= 7) {
+        if (column >= 0 && column <= 7) {
             this.column = column;
         }
     }
 
     public boolean isWhite() {
-        return isWhite;
+        return this.isWhite;
     }
 
 }

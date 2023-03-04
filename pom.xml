@@ -64,7 +64,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>main.Main</mainClass>
+                            <mainClass>com.jackson.main.Main</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
@@ -72,6 +72,17 @@
                             <stripDebug>true</stripDebug>
                             <noHeaderFiles>0</noHeaderFiles>
                             <debugForkedProcess>0</debugForkedProcess>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>debug</id>
+                        <configuration>
+                            <mainClass>com.jackson.main.Main</mainClass>
+                            <debug>true</debug>
+                            <debuglevel>none</debuglevel>
+                            <options>
+                                <option>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:8000</option>
+                            </options>
                         </configuration>
                     </execution>
                 </executions>

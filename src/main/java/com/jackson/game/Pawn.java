@@ -1,22 +1,11 @@
-package game;
-
-import ui.Board;
+package com.jackson.game;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import static game.Game.board;
 
 public class Pawn extends Piece {
     public Pawn(boolean isWhite, int row, int column) {
         super(isWhite, row, column, "Pawn");
-    }
-
-    @Override
-    public void move(Piece piece, int targetRow, int targetColumn) {
-        //Add movement indicators
-//        board.addMovementIndicators(getValidMoves());
     }
 
     public List<int[]> getValidMoves() {
@@ -85,7 +74,7 @@ public class Pawn extends Piece {
         return allMoves;
     }
 
-    private List<int[]> getAllMoves() { //Get all potential moves (for pawn)
+    protected List<int[]> getAllMoves() { //Get all potential moves (for pawn)
         List<int[]> allMoves = new ArrayList<>();
         if(isWhite()) { //All white moves
             allMoves.add(new int[]{this.getColumn(), this.getRow()-1}); //Move forward one square
@@ -100,4 +89,5 @@ public class Pawn extends Piece {
         }
         return allMoves;
     }
+
 }
